@@ -10,9 +10,11 @@ const
     errorhandler = require('errorhandler'),
     redisClient = require('./routes/redis-client'),
     redis = require('redis'),
+    bluebird = require('bluebird'),
     schedule = require('node-schedule');
 // mongoose = require('mongoose'),
-
+bluebird.promisifyAll(redis);
+const redis_client = redis.createClient(process.env.REDIS_URL);
 const isProduction = process.env.NODE_ENV === 'production';
 
 // Create global app object
@@ -26,25 +28,33 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use(require('method-override')());
-// app.use(express.static(__dirname + '/public'));
+//set the template engine ejs
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
+
+//routes
+app.get('/', (req, res) => {
+    res.render('index')
+});
+
+
 
 // app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
 if (!isProduction) {
     app.use(errorhandler());
 }
-const client = redis.createClient(process.env.REDIS_URL);
-const j = schedule.scheduleJob('* * * * * *', async () => {
-    let current = Math.floor(Date.now()/1000);
-    console.log("Current time: %s", current);
-    const rawData = await redisClient.zRangeByScoreAsync("jobs", 0, current);
-    if(rawData.length){
-        console.log('The answer to life, the universe, and everything! %s', rawData);
-        await redisClient.zRemRangeByScoreAsync("jobs", 0, current);
-    }
-
-
-});
+// const j = schedule.scheduleJob('* 1 * * * *', async () => {
+//     let current = Math.floor(Date.now()/1000);
+//     console.log("Current time: %s", current);
+//     const rawData = await redisClient.zRangeByScoreAsync("jobs", 0, current);
+//     if(rawData.length){
+//         console.log('The answer to life, the universe, and everything! %s', rawData);
+//         await redisClient.zRemRangeByScoreAsync("jobs", 0, current);
+//     }
+//
+//
+// });
 if (isProduction) {
     // mongoose.connect(process.env.MONGODB_URI);
 } else {
@@ -58,7 +68,7 @@ if (isProduction) {
 // require('./models/Comment');
 // require('./config/passport');
 
-// app.use(require('./routes'));
+app.use(require('./routes'));
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -102,3 +112,47 @@ app.use(function (err, req, res, next) {
 const server = app.listen(process.env.PORT || 3001, function () {
     console.log('Listening on port ' + server.address().port);
 });
+const io = require("socket.io")(server);
+
+
+//listen on every connection
+io.on('connection', (socket) => {
+    console.log('New user connected');
+
+    //default username
+    socket.username = "Anonymous";
+
+
+    //listen on change_username
+    socket.on('change_username', (data) => {
+        socket.username = data.username
+    });
+
+    //listen on new_message
+    socket.on('new_message', (data) => {
+        //broadcast the new message
+        io.sockets.emit('new_message', {message : data.message, username : socket.username});
+    });
+
+    //listen on typing
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', {username : socket.username})
+    })
+});
+
+// socket = io.connect('http://localhost:3001');
+
+schedule.scheduleJob('* * * * * *', function () {
+    let current = Math.floor(Date.now()/1000);
+    console.log("Current time: %s", current);
+    redis_client.multi().zrangebyscore("jobs", 0, current).execAsync().then(function(res) {
+        let msg = res[0];
+        if(msg.length){
+            console.log('The answer to life, the universe, and everything! %s', msg);
+            // socket.emit('new_message', {message : msg});
+            io.sockets.emit('new_message', {message : msg, username : "XXX"});
+            redis_client.zremrangebyscore("jobs", 0, current);
+        }
+    });
+});
+
