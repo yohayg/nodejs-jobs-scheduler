@@ -1,19 +1,12 @@
 const
-    // http = require('http'),
-    // path = require('path'),
-    // methods = require('methods'),
     express = require('express'),
     bodyParser = require('body-parser'),
-    // session = require('express-session'),
     cors = require('cors'),
-    // passport = require('passport'),
     errorhandler = require('errorhandler'),
-    redisClient = require('./routes/redis-client'),
     redis = require('redis'),
     bluebird = require('bluebird'),
     dateFormat = require('dateformat'),
     schedule = require('node-schedule');
-// mongoose = require('mongoose'),
 bluebird.promisifyAll(redis);
 const redis_client = redis.createClient(process.env.REDIS_URL);
 const isProduction = process.env.NODE_ENV === 'production';
@@ -39,34 +32,11 @@ app.get('/', (req, res) => {
 });
 
 
-// app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
+// app.use(session({ secret: 'nodejs-jobs-scheduler', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
 if (!isProduction) {
     app.use(errorhandler());
 }
-// const j = schedule.scheduleJob('* 1 * * * *', async () => {
-//     let current = Math.floor(Date.now()/1000);
-//     console.log("Current time: %s", current);
-//     const rawData = await redisClient.zRangeByScoreAsync("jobs", 0, current);
-//     if(rawData.length){
-//         console.log('The answer to life, the universe, and everything! %s', rawData);
-//         await redisClient.zRemRangeByScoreAsync("jobs", 0, current);
-//     }
-//
-//
-// });
-if (isProduction) {
-    // mongoose.connect(process.env.MONGODB_URI);
-} else {
-    // mongoose.connect('mongodb://localhost/conduit');
-    // mongoose.set('debug', true);
-
-}
-
-// require('./models/User');
-// require('./models/Article');
-// require('./models/Comment');
-// require('./config/passport');
 
 app.use(require('./routes'));
 
@@ -140,7 +110,6 @@ io.on('connection', (socket) => {
     })
 });
 
-// socket = io.connect('http://localhost:3001');
 
 schedule.scheduleJob('* * * * * *', function () {
     let date = new Date();
@@ -161,16 +130,6 @@ schedule.scheduleJob('* * * * * *', function () {
                 io.sockets.emit('new_message', {message:  JSON.parse(msg).msg, username: date_str});
             });
         }
-        // fn(err, ids);
     });
-    // redis_client.multi().zrangebyscore("jobs", 0, timestamp).execAsync().then(function(res) {
-    //     let msg = res[0];
-    //     if(msg.length){
-    //         console.log('The answer to life, the universe, and everything! %s', msg);
-    //         // socket.emit('new_message', {message : msg});
-    //         io.sockets.emit('new_message', {message : msg, username : "XXX"});
-    //         redis_client.zremrangebyscore("jobs", 0, timestamp);
-    //     }
-    // });
 });
 
