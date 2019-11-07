@@ -23,7 +23,7 @@ header {
     text-align: center;
 }
 
-h1 {
+h1,p {
     font-family: 'Comfortaa', sans-serif;
     margin: 0px;
 }

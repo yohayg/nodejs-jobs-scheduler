@@ -2,7 +2,7 @@
 <html lang="EN">
 <head>
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
-    <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <title>Scheduled Jobs App</title>
@@ -33,16 +33,19 @@
 <section>
     <p>
         Usage:
-            https://nodejs-jobs-api.herokuapp.com/api/jobs/${timestamp}?msg=hello%20world
+        <code style="background-color:black;color:white;">curl -X PUT https://nodejs-jobs-api.herokuapp.com/api/jobs/${timestamp}?msg=hello%20world</code> <br>
             Where timestamp is Epoch timestamp (https://www.epochconverter.com/)
-        example: curl -X PUT https://nodejs-jobs-api.herokuapp.com/api/jobs/1573125630?msg=hello%20world
-        where
+        <br>
+        example:
+        <code style="background-color:black;color:white;">curl -X PUT https://nodejs-jobs-api.herokuapp.com/api/jobs/1573125630?msg=hello%20world</code>
+        <br>
+        <br>
+        © 2019 <a href="https://github.com/yohayg/nodejs-jobs-api">https://github.com/yohayg/nodejs-jobs-api</a>
+        © 2019 <a href="https://github.com/yohayg/nodejs-jobs-scheduler">https://github.com/yohayg/nodejs-jobs-scheduler</a>
     </p>
 </section>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="chat.js"></script>
 </body>
 </html>
-© 2019 https://github.com/yohayg/nodejs-jobs-api
-© 2019 https://github.com/yohayg/nodejs-jobs-scheduler
 

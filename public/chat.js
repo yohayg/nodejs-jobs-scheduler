@@ -1,7 +1,7 @@
 $(function(){
     //make connection
-    // var socket = io.connect('http://localhost:3001');
-    let socket = io.connect('https://nodejs-jobs-scheduler.herokuapp.com');
+    var socket = io.connect('http://localhost:3001');
+    // let socket = io.connect('https://nodejs-jobs-scheduler.herokuapp.com');
 
     //buttons and inputs
     let message = $("#message");

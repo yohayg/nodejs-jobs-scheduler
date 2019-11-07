@@ -158,7 +158,7 @@ schedule.scheduleJob('* * * * * *', function () {
             messages.forEach(function (msg) {
                 console.log("%s %s", date_str, JSON.parse(msg).msg);
                 //{"messages":"hello world3"}
-                io.sockets.emit('new_message', {message: messages, username: "Echo"});
+                io.sockets.emit('new_message', {message:  JSON.parse(msg).msg, username: date_str});
             });
         }
         // fn(err, ids);
