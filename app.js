@@ -11,6 +11,7 @@ const
     redisClient = require('./routes/redis-client'),
     redis = require('redis'),
     bluebird = require('bluebird'),
+    dateFormat = require('dateformat'),
     schedule = require('node-schedule');
 // mongoose = require('mongoose'),
 bluebird.promisifyAll(redis);
@@ -36,7 +37,6 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => {
     res.render('index')
 });
-
 
 
 // app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
@@ -131,28 +131,46 @@ io.on('connection', (socket) => {
     //listen on new_message
     socket.on('new_message', (data) => {
         //broadcast the new message
-        io.sockets.emit('new_message', {message : data.message, username : socket.username});
+        io.sockets.emit('new_message', {message: data.message, username: socket.username});
     });
 
     //listen on typing
     socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', {username : socket.username})
+        socket.broadcast.emit('typing', {username: socket.username})
     })
 });
 
 // socket = io.connect('http://localhost:3001');
 
 schedule.scheduleJob('* * * * * *', function () {
-    let current = Math.floor(Date.now()/1000);
-    console.log("Current time: %s", current);
-    redis_client.multi().zrangebyscore("jobs", 0, current).execAsync().then(function(res) {
-        let msg = res[0];
-        if(msg.length){
-            console.log('The answer to life, the universe, and everything! %s', msg);
-            // socket.emit('new_message', {message : msg});
-            io.sockets.emit('new_message', {message : msg, username : "XXX"});
-            redis_client.zremrangebyscore("jobs", 0, current);
+    let date = new Date();
+    let timestamp = Math.floor(date.getTime() / 1000);
+    console.log("Current time: %s", dateFormat(date, "yyyy-mm-dd hh:MM:ss"));
+
+    redis_client.multi([
+        // [type, tkey, keys.length].concat(keys),
+        ['zrangebyscore', "jobs", 0, timestamp],
+        ['zremrangebyscore', "jobs", 0, timestamp],
+    ]).execAsync().then(function (res) {
+        let messages = res[0];
+        if (messages.length) {
+            let date_str = dateFormat(date, "yyyy-mm-dd hh:MM:ss");
+            messages.forEach(function (msg) {
+                console.log("%s %s", date_str, JSON.parse(msg).msg);
+                //{"messages":"hello world3"}
+                io.sockets.emit('new_message', {message: messages, username: "Echo"});
+            });
         }
+        // fn(err, ids);
     });
+    // redis_client.multi().zrangebyscore("jobs", 0, timestamp).execAsync().then(function(res) {
+    //     let msg = res[0];
+    //     if(msg.length){
+    //         console.log('The answer to life, the universe, and everything! %s', msg);
+    //         // socket.emit('new_message', {message : msg});
+    //         io.sockets.emit('new_message', {message : msg, username : "XXX"});
+    //         redis_client.zremrangebyscore("jobs", 0, timestamp);
+    //     }
+    // });
 });
 
