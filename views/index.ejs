@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="EN">
 <head>
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
     <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <title>Simple Chat App</title>
+    <title>Scheduled Jobs App</title>
 </head>
 
 <body>
 <header>
-    <h1>Super Chat</h1>
+    <h1>Super Jobs Dashboard</h1>
 </header>
 
-<section>
-    <div id="change_username">
-        <input id="username" type="text" />
-        <button id="send_username" type="button">Change username</button>
-    </div>
-</section>
+<!--<section>-->
+<!--    <div id="change_username">-->
+<!--        <input id="username" type="text" />-->
+<!--        <button id="send_username" type="button">Change username</button>-->
+<!--    </div>-->
+<!--</section>-->
 
 <section id="chatroom">
     <section id="feedback"></section>
@@ -26,13 +26,23 @@
 
 
 
-<section id="input_zone">
-    <input id="message" class="vertical-align" type="text" />
-    <button id="send_message" class="vertical-align" type="button">Send</button>
+<!--<section id="input_zone">-->
+<!--    <input id="message" class="vertical-align" type="text" />-->
+<!--    <button id="send_message" class="vertical-align" type="button">Send</button>-->
+<!--</section>-->
+<section>
+    <p>
+        Usage:
+            https://nodejs-jobs-api.herokuapp.com/api/jobs/${timestamp}?msg=hello%20world
+            Where timestamp is Epoch timestamp (https://www.epochconverter.com/)
+        example: curl -X PUT https://nodejs-jobs-api.herokuapp.com/api/jobs/1573125630?msg=hello%20world
+        where
+    </p>
 </section>
-
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="chat.js"></script>
 </body>
 </html>
-© 2019 GitHub, Inc.
+© 2019 https://github.com/yohayg/nodejs-jobs-api
+© 2019 https://github.com/yohayg/nodejs-jobs-scheduler
+
