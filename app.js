@@ -110,6 +110,8 @@ io.on('connection', (socket) => {
     })
 });
 
+const Rx = require('rx');
+
 
 schedule.scheduleJob('* * * * * *', function () {
     let date = new Date();
@@ -122,14 +124,35 @@ schedule.scheduleJob('* * * * * *', function () {
         ['zremrangebyscore', "jobs", 0, timestamp],
     ]).execAsync().then(function (res) {
         let messages = res[0];
+
         if (messages.length) {
             let date_str = dateFormat(date, "yyyy-mm-dd hh:MM:ss");
-            messages.forEach(function (msg) {
-                console.log("%s %s", date_str, JSON.parse(msg).msg);
-                //{"messages":"hello world3"}
-                io.sockets.emit('new_message', {message:  JSON.parse(msg).msg, username: timestamp});
+            Rx.Observable.fromArray(messages).forEach(msg => {
+                let val = JSON.parse(msg).msg;
+                console.log("%s %s", date_str, val);
+                io.sockets.emit('new_message', {message: val, username: timestamp});
             });
-        }
+            // messages.forEach(function (msg) {
+            //     console.log("%s %s", date_str, JSON.parse(msg).msg);
+            //     //{"messages":"hello world3"}
+            //     io.sockets.emit('new_message', {message:  JSON.parse(msg).msg, username: timestamp});
+            //     source = Rx.Observable.return(42)
+            // });
+            }
     });
 });
 
+
+//
+// const emitter = RxNode.toEventEmitter(source, 'data');
+//
+// emitter.on('data', function (data) {
+//     console.log('Data: ' + data);
+// });
+//
+// emitter.on('end', function () {
+//     console.log('End');
+// });
+//
+// // Ensure to call publish to fire events from the observable
+// emitter.publish();
