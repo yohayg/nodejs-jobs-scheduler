@@ -5,6 +5,26 @@
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+
+
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
+
+    <script src="chat.js"></script>
     <title>Scheduled Jobs App</title>
 </head>
 
@@ -13,23 +33,36 @@
     <h1>Super Jobs Dashboard</h1>
 </header>
 
-<!--<section>-->
-<!--    <div id="change_username">-->
-<!--        <input id="username" type="text" />-->
-<!--        <button id="send_username" type="button">Change username</button>-->
-<!--    </div>-->
-<!--</section>-->
-
 <section id="chatroom">
     <section id="feedback"></section>
 </section>
 
-
-
-<!--<section id="input_zone">-->
-<!--    <input id="message" class="vertical-align" type="text" />-->
-<!--    <button id="send_message" class="vertical-align" type="button">Send</button>-->
-<!--</section>-->
+<section id="input_zone">
+    <input id="message" class="vertical-align" type="text" />
+<!--    <input id="datetimepicker1" class="vertical-align" type="text" />-->
+    <div class="vertical-align" id="picker">
+        <div >
+            <div >
+                <div >
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" id="picker" />
+                        <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    $('#datetimepicker1').datetimepicker({
+                       format: 'YYYY-MM-DD HH:mm:ss'
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <button id="send_message" class="vertical-align" type="button">Schedule</button>
+</section>
 <section>
     <p>
         Usage:
@@ -44,8 +77,6 @@
         © 2019 <a href="https://github.com/yohayg/nodejs-jobs-scheduler">https://github.com/yohayg/nodejs-jobs-scheduler</a>
     </p>
 </section>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script src="chat.js"></script>
 </body>
 </html>
 

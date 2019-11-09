@@ -1,10 +1,14 @@
 $(function(){
     //make connection
-    // var socket = io.connect('http://localhost:3001');
-    let socket = io.connect('https://nodejs-jobs-scheduler.herokuapp.com');
+    // var socket_server = 'http://localhost:3000';
+    // var api_server = 'http://localhost:3000/api/jobs/';
+    let api_server = 'https://nodejs-jobs-api.herokuapp.com/api/jobs/';
+    let socket_server = 'https://nodejs-jobs-scheduler.herokuapp.com';
+    let socket = io.connect(socket_server);
 
     //buttons and inputs
     let message = $("#message");
+    let picker = $("#datetimepicker1");
     let username = $("#username");
     let send_message = $("#send_message");
     let send_username = $("#send_username");
@@ -13,7 +17,17 @@ $(function(){
 
     //Emit message
     send_message.click(function(){
-        socket.emit('new_message', {message : message.val()})
+        // socket.emit('new_message', {message : message.val()})
+        let datestr = $('#datetimepicker1').data().date;
+        let timestamp = Date.parse(datestr)/1000;
+        let target = api_server+timestamp+'?msg='+message.val();
+        $.ajax({
+            url: target,
+            type: 'PUT',
+            success: function(result) {
+                // Do something with the result
+            }
+        });
     });
 
     //Listen on new_message
