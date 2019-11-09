@@ -25,6 +25,7 @@ $(function(){
             url: target,
             type: 'PUT',
             success: function(result) {
+                message.val('');
                 // Do something with the result
             }
         });
