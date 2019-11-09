@@ -1,7 +1,7 @@
 $(function(){
     //make connection
-    // var socket_server = 'http://localhost:3000';
-    // var api_server = 'http://localhost:3000/api/jobs/';
+    // let socket_server = 'http://localhost:3001';
+    // let api_server = 'http://localhost:3000/api/jobs/';
     let api_server = 'https://nodejs-jobs-api.herokuapp.com/api/jobs/';
     let socket_server = 'https://nodejs-jobs-scheduler.herokuapp.com';
     let socket = io.connect(socket_server);
@@ -34,7 +34,7 @@ $(function(){
     socket.on("new_message", (data) => {
         feedback.html('');
         message.val('');
-        chatroom.append("<p class='message'>" + data.username + ": " + data.message + "</p>")
+        chatroom.append("<p class='message'>" + moment.unix(data.username).format('YYYY-MM-DD HH:mm:ss') + ": " + data.message + "</p>")
     });
 
     //Emit a username
