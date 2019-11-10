@@ -65,7 +65,7 @@ input#username {
 input#message {
     display: inline-block;
     width: 72%;
-    height: 70%;
+    height: 56%;
     font-family: 'Comfortaa', sans-serif;
     font-size: 2vh;
 }
@@ -80,7 +80,7 @@ div#picker {
 
 button#send_message {
     display: inline-block;
-    height: 70%;
+    height: 62%;
     width: 10%;
 }
 
